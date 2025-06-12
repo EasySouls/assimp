@@ -126,3 +126,11 @@ generated/*
 contrib/meshlab/autoclone
 # tinyusdz repo, automatically cloned via CMake
 contrib/tinyusdz/autoclone
+
+bin/
+bin-int/
+*.lib
+*.dll
+*.tlog
+*.vcxproj.filters
+*.vcxproj
