@@ -1,76 +1,87 @@
 project "Assimp"
   kind "StaticLib"
   language "C++"
-  cppdialect "C++20"
+  cppdialect "C++17"
   staticruntime "off"
 
   targetdir("bin/" .. outputdir .. "/%{prj.name}")
   objdir("bin-int/" .. outputdir .. "/%{prj.name}")
 
+  defines {
+    "ASSIMP_BUILD_NO_USD_IMPORTER",
+    "ASSIMP_BUILD_NO_3DS_IMPORTER",
+    "ASSIMP_BUILD_NO_COLLADA_IMPORTER", 
+    "ASSIMP_BUILD_NO_OPENGEX_IMPORTER",
+    "ASSIMP_BUILD_NO_C4D_IMPORTER",
+    "ASSIMP_BUILD_NO_X_IMPORTER",
+    "ASSIMP_BUILD_NO_BLEND_IMPORTER",
+   }
+
   files
   {
-	  -- Assimp Core Source Files
-    "code/**.h",
-    "code/**.hpp",
-    "code/**.cpp",
-    "code/**.inl",
-    "code/**.c",
+	  -- Core
+      "code/Common/**.h",
+      "code/Common/**.cpp",
+      "code/PostProcessing/**.h",
+      "code/PostProcessing/**.cpp",
+      "code/CApi/**.h",
+      "code/CApi/**.cpp",
+      "code/Material/**.h",
+      "code/Material/**.cpp",
+      "code/Maths/**.h",
+      "code/Maths/**.cpp",
+      "code/SceneCombiner/**.h",
+      "code/SceneCombiner/**.cpp",
+      "code/Geometry/**.h",
+      "code/Geometry/**.cpp",
+      "code/GenericPropertyParser/**.h",
+      "code/GenericPropertyParser/**.cpp",
+      "code/Version/**.h",
+      "code/Version/**.cpp",
+      "code/ValidateDataStructure/**.h",
+      "code/ValidateDataStructure/**.cpp",
+      "code/ProcessHelper/**.h",
+      "code/ProcessHelper/**.cpp",
+      "code/PretransformVertices/**.h",
+      "code/PretransformVertices/**.cpp",
 
-    -- Public Headers
-    "include/assimp/**.h",
-    "include/assimp/**.hpp",
-    "include/assimp/**.inl",
+      -- Importers
+      "code/AssetLib/Obj/**.h",
+      "code/AssetLib/Obj/**.cpp",
+      "code/AssetLib/FBX/**.h",
+      "code/AssetLib/FBX/**.cpp",
+      "code/AssetLib/glTF/**.h",
+      "code/AssetLib/glTF/**.cpp",
+      "code/AssetLib/glTF/**.inl",
+      "code/AssetLib/glTF2/**.h",
+      "code/AssetLib/glTF2/**.cpp",
+      "code/AssetLib/glTF2/**.inl",
+      "code/AssetLib/glTFCommon/**.h",
+      "code/AssetLib/glTFCommon/**.cpp",
 
-    -- ZLib (for compressed formats)
-    "contrib/zlib/*.c",
-    "contrib/zlib/*.h",
+      -- Public API
+      "include/assimp/**.h",
+      "include/assimp/**.inl",
+      "include/assimp/**.hpp",
 
-    -- ZIP Handling
-    "contrib/zip/src/**.h",
-    "contrib/zip/src/**.c",
-    "contrib/unzip/**.c",
+      -- Contrib dependencies (for these importers)
+      "contrib/zlib/*.c",
+      "contrib/zlib/*.h",
+      "contrib/irrXML/*.cpp",
+      "contrib/irrXML/*.h",
+      "contrib/pugixml/src/pugixml.cpp",
+      "contrib/pugixml/src/pugixml.hpp",
 
-    -- IrrXML (for Collada, X, etc.)
-    "contrib/irrXML/*.h",
-    "contrib/irrXML/*.cpp",
+      -- FBX requires UTF8-CPP
+      "contrib/utf8cpp/source/utf8.h",
+      "contrib/utf8cpp/source/utf8/*.h",
 
-    -- PugiXML (for XML-based formats like FBX)
-    "contrib/pugixml/src/pugixml.cpp",
-    "contrib/pugixml/src/pugixml.hpp",
+      -- GLTF requires RapidJSON
+      "contrib/rapidjson/include/rapidjson/*.h",
+      "contrib/rapidjson/include/rapidjson/**.h",
 
-    -- Earcut (for polygon triangulation)
-    "contrib/earcut-hpp/earcut.hpp",
-
-    -- Poly2Tri (polygon triangulation)
-    "contrib/poly2tri/poly2tri/poly2tri.h",
-    "contrib/poly2tri/poly2tri/sweep/**.h",
-    "contrib/poly2tri/poly2tri/sweep/**.cpp",
-
-    -- UTF8-CPP (for SIBImporter)
-    "contrib/utf8cpp/source/utf8.h",
-    "contrib/utf8cpp/source/utf8/*.h",
-
-    -- Clipper (for C4DImporter)
-    "contrib/clipper/clipper.hpp",
-    "contrib/clipper/c4d_file.h",
-
-    -- RapidJSON (for glTFImporter)
-    "contrib/rapidjson/include/rapidjson/*.h",
-    "contrib/rapidjson/include/rapidjson/**.h",
-
-    -- OpenDDLParser (for OpenGEXImporter)
-    "contrib/openddlparser/include/openddlparser/**.h",
-    "contrib/openddlparser/code/OpenDDLParser.cpp",
-    "contrib/openddlparser/code/DDLNode.cpp",
-    "contrib/openddlparser/code/Value.cpp",
-
-    -- TinyUSDZ (for USDImporter)
-    "contrib/tinyusdz/*.hh",
-    "contrib/tinyusdz/*.cc",
-
-    -- Meshlab (for VRMLImporter) -- optional, can be excluded if not needed
-    "contrib/meshlab/autoclone/meshlab_repo-src/src/meshlabplugins/io_x3d/vrml/*.h",
-    "contrib/meshlab/autoclone/meshlab_repo-src/src/meshlabplugins/io_x3d/vrml/*.cpp"
+      "contrib/unzip/**.c",
+      "contrib/unzip/**.h",
   }
 
   includedirs
@@ -78,21 +89,14 @@ project "Assimp"
       ".",
 	  "include",
       "code",
-
+      "code/AssetLib/glTFCommon",
       "contrib",
       "contrib/irrXML",
       "contrib/zlib",
-      "contrib/zip/src",
-      "contrib/unzip",
+      "contrib/utf8cpp/source",
       "contrib/pugixml/src",
       "contrib/rapidjson/include",
-      "contrib/earcut-hpp",
-      "contrib/poly2tri/poly2tri",
-      "contrib/utf8cpp/source",
-      "contrib/clipper",
-      "contrib/tinyusdz",
-      "contrib/openddlparser/include",
-      "contrib/meshlab/autoclone/meshlab_repo-src/src/meshlabplugins/io_x3d/vrml"
+      "contrib/unzip",
   }
 
   filter "system:windows"
